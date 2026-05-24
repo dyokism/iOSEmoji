@@ -19,7 +19,6 @@ iOS Emoji is a Magisk/KernelSU/APatch module that installs Apple iOS 26.4 Emojis
 - **Android 12+ Font OTA Bypass**: Clears `/data/fonts` and disables Google Font OTA provider packages on every boot to prevent system updates from reverting your emojis.
 - **In-App Emoji Direct-Patching**: Direct-patches the internal emoji files for Facebook, Messenger, and Facebook Lite apps.
 - **Messenger OTA Font Blocking**: Blocks Facebook Messenger from overriding iOS emojis by locking its OTA fonts path using a secure system chmod trick.
-- **Stealth Mounts**: Best used in combination with **MountifyNext** to completely hide the root modifications from banking apps (e.g., BRImo).
 
 ---
 

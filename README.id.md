@@ -19,7 +19,6 @@ iOS Emoji adalah modul Magisk/KernelSU/APatch yang memasang Emoji Apple iOS 26.4
 - **Bypass Mesin Font OTA Android 12+**: Membersihkan direktori `/data/fonts` dan menonaktifkan paket GMS Font OTA di setiap boot untuk mencegah sistem menimpa kembali emoji kustom Anda.
 - **Tambalan Emoji Dalam-Aplikasi**: Secara otomatis menambal berkas emoji internal bawaan untuk aplikasi Facebook, Messenger, dan Facebook Lite.
 - **Kunci Unduhan OTA Messenger**: Mengunci jalur unduhan font otomatis pada aplikasi Facebook Messenger menggunakan trik keamanan chmod sistem.
-- **Stealth Mounting**: Sangat direkomendasikan dikombinasikan dengan **MountifyNext** agar seluruh modifikasi tersembunyi dengan aman dari deteksi aplikasi perbankan (seperti BRImo).
 
 ---
 
