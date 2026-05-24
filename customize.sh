@@ -3,7 +3,7 @@
 # universal installation for android devices
 
 ui_print "[+] iOS Emoji"
-ui_print "[+] Preparing iOS 26.4 Emoji for \$(getprop ro.product.model)"
+ui_print "[+] Preparing iOS 26.4 Emoji"
 
 # bypass android 12+ font ota engine
 if [ -d "/data/fonts" ]; then
