@@ -43,4 +43,4 @@ iOS Emoji adalah modul Magisk/KernelSU/APatch yang memasang Emoji Apple iOS 26.4
 ## Pengembang & Lisensi
 
 - **Pengembang**: [dyokism](https://github.com/dyokism)
-- **Lisensi**: MIT License
+- **Lisensi**: MIT
