@@ -1,7 +1,7 @@
 id=iOS_Emoji
 name=iOS Emoji
-version=1.0
-versionCode=100
+version=1.1
+versionCode=110
 author=dyokism
 description=iOS 26.4 Emojis for all Android devices.
 updateJson=https://raw.githubusercontent.com/dyokism/iOSEmoji/main/update.json

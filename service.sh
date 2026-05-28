@@ -10,12 +10,24 @@ log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOGFILE"
 }
 
-# wait for boot completion
-until [ "$(getprop sys.boot_completed)" = "1" ] && [ -d /sdcard ]; do
-    sleep 2
+# wait for boot completion with a 5-minute (300s) timeout
+TIMEOUT=300
+ELAPSED=0
+while [ "$(getprop sys.boot_completed)" != "1" ] || [ ! -d /sdcard ]; do
+    if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
+        log "WARNING: Boot wait timed out after ${TIMEOUT}s. Proceeding anyway."
+        break
+    fi
+    sleep 5
+    ELAPSED=$((ELAPSED + 5))
 done
 
-log "iOS Emoji: boot completed"
+log "iOS Emoji: boot completed (waited ${ELAPSED}s)"
+
+if [ ! -f "$SRC_FONT" ]; then
+    log "ERROR: Source font $SRC_FONT not found! Exiting."
+    exit 1
+fi
 
 # direct target messenger & facebook emojis
 FACEBOOK_APPS="com.facebook.orca com.facebook.katana com.facebook.lite com.facebook.mlite"
@@ -31,9 +43,12 @@ for pkg in $FACEBOOK_APPS; do
         fi
         
         mkdir -p "$target_dir"
-        cp -f "$SRC_FONT" "$target_file" 2>/dev/null
-        chmod 444 "$target_file" 2>/dev/null
-        log "Direct-patched in-app emoji for $pkg"
+        if cp -f "$SRC_FONT" "$target_file" 2>/dev/null; then
+            chmod 444 "$target_file" 2>/dev/null
+            log "Direct-patched in-app emoji for $pkg"
+        else
+            log "WARNING: Failed to patch $pkg"
+        fi
     fi
 done
 
