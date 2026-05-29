@@ -93,3 +93,4 @@ log "GMS Font OTA engines disabled"
 rm -rf /data/fonts 2>/dev/null
 rm -rf /data/data/com.google.android.gms/files/fonts 2>/dev/null
 log "OTA font caches cleared"
+log "iOS Emoji: service completed"

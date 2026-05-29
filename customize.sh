@@ -3,7 +3,6 @@
 # ios_emoji - customize.sh
 # universal installation for android devices with advanced profiling
 
-set -x
 INSTALL_LOG="$MODPATH/install.log"
 log() {
   echo "$(date '+%H:%M:%S') $1" >> "$INSTALL_LOG"
@@ -11,7 +10,7 @@ log() {
 log "=== iOS Emoji installation started ==="
 
 ui_print "*****************************************"
-ui_print "        iOS Emoji Installer v1.1         "
+ui_print "        iOS Emoji Installer v1.2         "
 ui_print "*****************************************"
 
 # check root type
@@ -37,25 +36,19 @@ fi
 ui_print "- Android API Level: $API"
 log "API: $API"
 
-# Profiling phone model (fulfills the changelog claim!)
-local brand model
+# profiling phone model
 brand="$(getprop ro.product.brand)"
 model="$(getprop ro.product.model)"
-ui_print "- Dynamic Profiling: Detected $brand ($model)"
+ui_print "- Device: $brand ($model)"
 log "Device brand: $brand, Model: $model"
 
-# Personalized dynamic greeting
-ui_print "  -> Hello $model user! Preparing custom iOS emoji layout."
-
-# Samsung-specific optimization log
+# samsung-specific optimization log
 if echo "$brand" | grep -qi "samsung"; then
-  ui_print "- Brand Match: Samsung device detected!"
-  ui_print "  Mounting premium iOS SamsungColorEmoji.ttf systemlessly."
-  log "Device type: Samsung (using SamsungColorEmoji.ttf)"
+  ui_print "- Mounting SamsungColorEmoji.ttf..."
+  log "Selected SamsungColorEmoji.ttf for Samsung device"
 else
-  ui_print "- Brand Match: Standard Android device detected."
-  ui_print "  Mounting premium iOS NotoColorEmoji.ttf systemlessly."
-  log "Device type: Standard non-Samsung (using NotoColorEmoji.ttf)"
+  ui_print "- Mounting NotoColorEmoji.ttf..."
+  log "Selected NotoColorEmoji.ttf for standard rendering"
 fi
 
 # bypass android 12+ font ota engine
@@ -65,10 +58,10 @@ if [ -d "/data/fonts" ]; then
     log "Cleared OTA /data/fonts"
 fi
 
-# Set standard permissions
+# set standard permissions
 ui_print "- Setting file permissions..."
 set_perm_recursive "$MODPATH" 0 0 0755 0644
 log "Permissions set"
 
-ui_print "- Done! Reboot your device to apply iOS Emojis systemlessly."
+ui_print "- Reboot to apply."
 log "=== iOS Emoji installation completed ==="
