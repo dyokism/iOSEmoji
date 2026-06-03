@@ -1,3 +1,5 @@
 #!/system/bin/sh
-# early boot hook: clear Android OTA font directory
-rm -rf /data/fonts
+# clear ota fonts safely
+if [ -d /data/fonts ] && [ ! -L /data/fonts ]; then
+    rm -rf /data/fonts
+fi

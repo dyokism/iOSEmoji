@@ -1,4 +1,11 @@
 ## Change Log:
+- 1.3 (Storage & Code Refinements)
+  - Fixed SELinux context denials for in-app emoji patches.
+  - Auto-delete unused font files on installation (saves ~35MB).
+  - Added symlink checks for OTA font cleanup and removed duplicate wipes.
+  - Added active-IME check before force-stopping Gboard.
+  - Enforced numeric-only checks for user profile directories.
+
 - 1.2 (Code Quality & Universal Refactoring)
   - Fixed syntax bugs (removed invalid global `local` variable declarations).
   - Cleaned up installer output tone & wording for a more premium experience.

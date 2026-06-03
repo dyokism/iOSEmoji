@@ -9,24 +9,25 @@ log() {
 
 log "iOS Emoji uninstall started"
 
-# re-enable GMS font providers
+# re-enable gms font providers for numeric users
 GMS_PROVIDER="com.google.android.gms/com.google.android.gms.fonts.provider.FontsProvider"
 GMS_UPDATER="com.google.android.gms/com.google.android.gms.fonts.update.UpdateSchedulerService"
 
 for user_dir in /data/user/*; do
     uid=${user_dir##*/}
-    pm enable --user "$uid" "$GMS_PROVIDER" >/dev/null 2>&1
-    pm enable --user "$uid" "$GMS_UPDATER" >/dev/null 2>&1
+    if echo "$uid" | grep -qE '^[0-9]+$'; then
+        pm enable --user "$uid" "$GMS_PROVIDER" >/dev/null 2>&1
+        pm enable --user "$uid" "$GMS_UPDATER" >/dev/null 2>&1
+    fi
 done
 log "GMS Font OTA engines re-enabled"
 
-# restore Messenger chmod/path
-for orca_dir in "/data/data/com.facebook.orca/files/fonts" "/data/user/0/com.facebook.orca/files/fonts"; do
-    if [ -d "$orca_dir" ]; then
-        chmod 700 "$orca_dir" 2>/dev/null
-        rm -rf "$orca_dir" 2>/dev/null
-    fi
-done
+# restore messenger font path
+orca_dir="/data/data/com.facebook.orca/files/fonts"
+if [ -d "$orca_dir" ]; then
+    chmod 700 "$orca_dir" 2>/dev/null
+    rm -rf "$orca_dir" 2>/dev/null
+fi
 log "Restored Messenger font paths"
 
 # delete direct-patched Facebook/Messenger font files

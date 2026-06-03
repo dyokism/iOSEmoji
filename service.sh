@@ -4,16 +4,22 @@
 
 MODPATH=${0%/*}
 LOGFILE="$MODPATH/service.log"
-SRC_FONT="$MODPATH/system/fonts/NotoColorEmoji.ttf"
+# set source font based on brand
+brand=$(getprop ro.product.brand)
+if echo "$brand" | grep -qi samsung; then
+    SRC_FONT="$MODPATH/system/fonts/SamsungColorEmoji.ttf"
+else
+    SRC_FONT="$MODPATH/system/fonts/NotoColorEmoji.ttf"
+fi
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOGFILE"
 }
 
-# wait for boot completion with a 5-minute (300s) timeout
+# wait for boot completed
 TIMEOUT=300
 ELAPSED=0
-while [ "$(getprop sys.boot_completed)" != "1" ] || [ ! -d /sdcard ]; do
+while [ "$(getprop sys.boot_completed)" != "1" ]; do
     if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
         log "WARNING: Boot wait timed out after ${TIMEOUT}s. Proceeding anyway."
         break
@@ -43,6 +49,8 @@ for pkg in $FACEBOOK_APPS; do
         fi
         
         mkdir -p "$target_dir"
+        # fix selinux context for app directory
+        restorecon -R "$target_dir" 2>/dev/null
         if cp -f "$SRC_FONT" "$target_file" 2>/dev/null; then
             chmod 444 "$target_file" 2>/dev/null
             log "Direct-patched in-app emoji for $pkg"
@@ -52,15 +60,15 @@ for pkg in $FACEBOOK_APPS; do
     fi
 done
 
-# block messenger font ota downloads (chmod 000 trick)
-for orca_dir in "/data/data/com.facebook.orca/files/fonts" "/data/user/0/com.facebook.orca/files/fonts"; do
-    if [ -d "/data/data/com.facebook.orca" ]; then
+# block messenger font ota downloads
+if [ -d "/data/data/com.facebook.orca" ]; then
+    for orca_dir in "/data/data/com.facebook.orca/files/fonts" "/data/user/0/com.facebook.orca/files/fonts"; do
         rm -rf "$orca_dir" 2>/dev/null
         mkdir -p "$orca_dir"
         chmod 000 "$orca_dir"
         log "Blocked Messenger font cache path: $orca_dir"
-    fi
-done
+    done
+fi
 
 # clear gboard cache
 GBOARD_PKG="com.google.android.inputmethod.latin"
@@ -68,7 +76,10 @@ if [ -d "/data/data/$GBOARD_PKG" ]; then
     for subpath in /cache /code_cache /app_webview; do
         rm -rf "/data/data/${GBOARD_PKG}${subpath}" 2>/dev/null
     done
-    am force-stop "$GBOARD_PKG"
+    # kill gboard if active ime
+    if settings get secure default_input_method | grep -q "$GBOARD_PKG"; then
+        am force-stop "$GBOARD_PKG"
+    fi
     log "Cleared Gboard cache & force-stopped"
 fi
 
@@ -89,8 +100,7 @@ for user_dir in /data/user/*; do
 done
 log "GMS Font OTA engines disabled"
 
-# cleanup gms leftover fonts
-rm -rf /data/fonts 2>/dev/null
+# cleanup leftover gms font cache
 rm -rf /data/data/com.google.android.gms/files/fonts 2>/dev/null
 log "OTA font caches cleared"
 log "iOS Emoji: service completed"

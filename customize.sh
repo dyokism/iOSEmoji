@@ -10,7 +10,7 @@ log() {
 log "=== iOS Emoji installation started ==="
 
 ui_print "*****************************************"
-ui_print "        iOS Emoji Installer v1.2         "
+ui_print "        iOS Emoji Installer v1.3         "
 ui_print "*****************************************"
 
 # check root type
@@ -42,13 +42,15 @@ model="$(getprop ro.product.model)"
 ui_print "- Device: $brand ($model)"
 log "Device brand: $brand, Model: $model"
 
-# samsung-specific optimization log
-if echo "$brand" | grep -qi "samsung"; then
+# detect brand and delete unused font
+if echo "$brand" | grep -qi samsung; then
   ui_print "- Mounting SamsungColorEmoji.ttf..."
   log "Selected SamsungColorEmoji.ttf for Samsung device"
+  rm -f "$MODPATH/system/fonts/NotoColorEmoji.ttf"
 else
   ui_print "- Mounting NotoColorEmoji.ttf..."
   log "Selected NotoColorEmoji.ttf for standard rendering"
+  rm -f "$MODPATH/system/fonts/SamsungColorEmoji.ttf"
 fi
 
 # bypass android 12+ font ota engine
