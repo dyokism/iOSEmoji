@@ -1,4 +1,4 @@
-[English](file:///home/kodyy/Projects/iOS_Emoji/README.md) | [Bahasa Indonesia](file:///home/kodyy/Projects/iOS_Emoji/README.id.md)
+[English](README.md) | [Bahasa Indonesia](README.id.md)
 
 # iOS Emoji
 
